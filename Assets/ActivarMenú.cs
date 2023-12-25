@@ -7,6 +7,7 @@ public class ActivarMenú : MonoBehaviour
     public bool EstadoMenúInvocacion = false;
     [Header("Menú para controlar")]
     [SerializeField] private GameObject Menú;
+    [SerializeField] private SpriteRenderer[] MenúOpcionesAInvocar;
     [SerializeField] private GameObject ZonaInvocación;
     [SerializeField] private DatosJuego Informacion;
     private void OnMouseDown()
@@ -17,6 +18,10 @@ public class ActivarMenú : MonoBehaviour
         if (!EstadoMenúInvocacion)
         {
             Informacion.UnidadSeleccionada = 0;
+            for(int i = 0; i <= MenúOpcionesAInvocar.Length; i++)
+            {
+                MenúOpcionesAInvocar[i].color = Color.white;
+            }
         }
     }
 }

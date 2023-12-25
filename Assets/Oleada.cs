@@ -7,15 +7,15 @@ public class Oleada : MonoBehaviour
     [Header("Informacion")]
     [SerializeField] public int NumeroDeInvocaciones;
     [SerializeField] public InvocacionEnemiga[] Zonas = new InvocacionEnemiga[4];
-    [SerializeField] public Enemigo[] TipoEnemigos = new Enemigo[4];
+    [SerializeField] public GameObject[] TipoEnemigos = new GameObject[4];
     [SerializeField] public int[] ClaseEnemigos;
     [SerializeField] public float[] TiempoAparicion;
     [SerializeField] public int[] ZonaAparicion;
     public bool[] ValidarInvocacion;
     private void Start()
     {
-        ValidarInvocacion = new bool[NumeroDeInvocaciones];
-        for (int i = 0; i < NumeroDeInvocaciones; i++)
+        ValidarInvocacion = new bool[TiempoAparicion.Length];
+        for (int i = 0; i < TiempoAparicion.Length; i++)
         {
             ValidarInvocacion[i] = true;
         }
@@ -23,7 +23,7 @@ public class Oleada : MonoBehaviour
     private void Update()
     {
         bool SinNadaQueInvocar = true;
-        for (int i = 0; i< NumeroDeInvocaciones; i++)
+        for (int i = 0; i< TiempoAparicion.Length; i++)
         {
             if (ValidarInvocacion[i])
             {

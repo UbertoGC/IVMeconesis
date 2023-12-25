@@ -15,7 +15,7 @@ public class Deteccion : MonoBehaviour
         }
         AlMenosUno = false;
     }
-    public void OnTriggerStay(Collider other)
+    public void OnTriggerStay2D(Collider2D other)
     {
         if (other.CompareTag("Enemigo") || other.CompareTag("Aliado"))
         {

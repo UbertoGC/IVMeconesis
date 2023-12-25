@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SeleccionarUnidad : MonoBehaviour
 {
-    [SerializeField] private DatosJuego Informacion;
     [Header("Tipo de Unidad")]
-    [SerializeField] private int TipoUnidad;
+    [SerializeField] private Image[] DemasOpciones;
     private void OnMouseDown()
     {
-        Informacion.UnidadSeleccionada = TipoUnidad;
+        for (int i = 0; i < DemasOpciones.Length; i++)
+        {
+            DemasOpciones[i].color = Color.white;
+        }
+        GetComponent<Image>().color = Color.cyan;
     }
 }

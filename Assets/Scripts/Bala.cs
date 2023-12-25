@@ -14,10 +14,11 @@ public class Bala : MonoBehaviour
     {
         transform.Translate(Vector3.right * velocidad * Time.deltaTime);
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enemigo") || other.CompareTag("Aliado"))
         {
+            Debug.Log("Hola");
             if (!other.CompareTag(TagDisparador))
             {
                 if(other.CompareTag("Enemigo"))

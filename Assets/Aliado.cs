@@ -2,13 +2,18 @@ using UnityEngine;
 
 public class Aliado : Unidad
 {
+    private AudioSource AudioRecurso;
     [Header("Disparo")]
     [SerializeField] private GameObject Munición;
     [SerializeField] private Transform ControladorDisparo;
     [SerializeField] private float VelocidadDeDisparo;
 
     private float TiempoDeEspera = 0f;
-    private void Update()
+    void Start()
+    {
+        AudioRecurso = GetComponent<AudioSource>();
+    }
+    void Update()
     {
         if (Atacando)
         {
@@ -25,6 +30,7 @@ public class Aliado : Unidad
     }
     protected void Disparar()
     {
+        AudioRecurso.Play();
         Instantiate(Munición, ControladorDisparo.position, ControladorDisparo.rotation);
     }
 }

@@ -8,10 +8,10 @@ public class InvocacionEnemiga : MonoBehaviour
     {
         
     }
-    public void Invocar(Enemigo Ser)
+    public void Invocar(GameObject Ser)
     {
         Vector3 arriba = transform.position;
-        arriba.y += 1f;
+        arriba.y += 0.5f;
         Instantiate(Ser, arriba, transform.rotation);
     }
 }

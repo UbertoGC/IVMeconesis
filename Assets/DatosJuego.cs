@@ -4,10 +4,12 @@ using UnityEngine.UI;
 
 public class DatosJuego : MonoBehaviour
 {
+    [Header("Controlador de Dialogos")]
+    [SerializeField] public AdministrarPantallas ControladorPantallas;
     [Header("Cargar Unidades")]
-    [SerializeField] public Unidad[] Unidades = new Unidad[4];
+    [SerializeField] public GameObject[] Unidades = new GameObject[4];
     [Header("Enemigos")]
-    [SerializeField] private Enemigo[] Enemigos = new Enemigo[4];
+    [SerializeField] private GameObject[] Enemigos = new GameObject[4];
     [Header("Oleadas")]
     [SerializeField] private GameObject OlaDeEnemigos;
     [SerializeField] private InvocacionEnemiga[] ZonasEnemigas = new InvocacionEnemiga[4];
@@ -37,12 +39,14 @@ public class DatosJuego : MonoBehaviour
     private int[][] ZonaAparicion = new int[4][];
     private int OleadasRestantes = 0;
     private bool Derrotado = false;
-    
+    private bool PartidaFinalizada = false;
+    private float TiempoParaIrse = 3.0f;
     private float PreparacionParaOleada;
 
     private void Start()
     {
         /*Estadisticas*/
+        
         Oleadas = OlaDeEnemigos.GetComponent<Oleada>();
         PreparacionParaOleada = TiempoParaPrimeraOleada;
         Dinero = DineroInicial;
@@ -55,7 +59,7 @@ public class DatosJuego : MonoBehaviour
         {
             if (Enemigos[i]!= null)
             {
-                Enemigos[i].Información = this;
+                Enemigos[i].GetComponent<Enemigo>().Información = this;
             }
         }
 
@@ -143,40 +147,64 @@ public class DatosJuego : MonoBehaviour
     }
     private void Update()
     {
-        if(EnemigosRestantes == 0)
+        if (!PartidaFinalizada)
         {
-            Victoria();
-        }
-        else
-        {
-            if (TiempoParaMasDinero <= 0f)
+            if (Derrotado)
             {
-                TiempoParaMasDinero = RecargaDeGananciaDeDinero;
-                GanarDinero(DineroPorTiempo);
+                if (TiempoParaIrse <= 0)
+                {
+                    PartidaFinalizada = true;
+                    Derrota();
+                }
+                else
+                    TiempoParaIrse -= Time.deltaTime;
+            }
+            else if (EnemigosRestantes == 0)
+            {
+
+                if (TiempoParaIrse <= 0)
+                {
+                    PartidaFinalizada = true;
+                    Victoria();
+                }
+                else
+                    TiempoParaIrse -= Time.deltaTime;
             }
             else
             {
-                TiempoParaMasDinero -= Time.deltaTime;
-            }
-            if(OleadasRestantes < NúmeroOleadas)
-            {
-                if (PreparacionParaOleada <= 0)
+                if (TiempoParaMasDinero <= 0f)
                 {
-                    MandarOleada();
-                    OleadasRestantes++;
-                    PreparacionParaOleada = TiempoRecargaOleada;
+                    TiempoParaMasDinero = RecargaDeGananciaDeDinero;
+                    GanarDinero(DineroPorTiempo);
                 }
                 else
                 {
-                    PreparacionParaOleada -= Time.deltaTime;
+                    TiempoParaMasDinero -= Time.deltaTime;
+                }
+                if (OleadasRestantes < NúmeroOleadas)
+                {
+                    if (PreparacionParaOleada <= 0)
+                    {
+                        MandarOleada();
+                        OleadasRestantes++;
+                        PreparacionParaOleada = TiempoRecargaOleada;
+                    }
+                    else
+                    {
+                        PreparacionParaOleada -= Time.deltaTime;
+                    }
                 }
             }
         }
+        
+    }
+    private void Derrota()
+    {
+        ControladorPantallas.Derrota(Vida, Dinero);
     }
     private void Victoria()
     {
-        ContadorDeVida.text = "VICTORIA";
-        Time.timeScale = 0f;
+        ControladorPantallas.VictoriaCinematica(Vida, Dinero);
     }
     private void MandarOleada()
     {
@@ -185,11 +213,11 @@ public class DatosJuego : MonoBehaviour
         Oleadas.ClaseEnemigos = ClaseEnemigosInvocados[OleadasRestantes];
         Oleadas.TiempoAparicion = TiempoAparicion[OleadasRestantes];
         Oleadas.ZonaAparicion = ZonaAparicion[OleadasRestantes];
-        Instantiate(Oleadas, Vector3.zero, transform.rotation);
+        Instantiate(OlaDeEnemigos, Vector3.zero, transform.rotation);
     }
     public bool PagarCosto(int Indice)
     {
-        int Valor = Unidades[Indice].Valor;
+        int Valor = Unidades[Indice].GetComponent<Aliado>().Valor;
         if (Valor > Dinero)
         {
             return false;
@@ -208,6 +236,7 @@ public class DatosJuego : MonoBehaviour
     }
     public void PerderVida(int Valor)
     {
+        
         Vida -= Valor;
         ContadorDeVida.text = Vida.ToString();
         if (Vida <= 0)
@@ -217,5 +246,12 @@ public class DatosJuego : MonoBehaviour
             Derrotado = true;
         }
     }
-    
+    public void Deseleccionar()
+    {
+        UnidadSeleccionada = 0;
+    }
+    public void ElegirUnidad(int TipoUnidad)
+    {
+        UnidadSeleccionada = TipoUnidad;
+    }
 }

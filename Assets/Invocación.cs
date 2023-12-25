@@ -7,7 +7,7 @@ public class Invocación : MonoBehaviour
 {
     [Header("Datos Principales")]
     [SerializeField] private DatosJuego Informacion;
-    [SerializeField] private Unidad UnidadColocada;
+    [SerializeField] private GameObject UnidadColocada;
     [SerializeField] public bool Usado = false;
     private void OnMouseDown()
     {
@@ -17,7 +17,7 @@ public class Invocación : MonoBehaviour
             if (Informacion.PagarCosto(indice))
             {
                 Vector3 arriba = transform.position;
-                arriba.y += 1f;
+                arriba.y += 0.5f;
                 arriba.z += 3f;
                 UnidadColocada = Instantiate(Informacion.Unidades[indice], arriba, transform.rotation);
                 Usado = true;
